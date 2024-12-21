@@ -1,0 +1,59 @@
+{
+    "tables": {
+        "electronics": {
+            "columns": {
+                "customer_id": {
+                    "sdtype": "numerical"
+                },
+                "age": {
+                    "sdtype": "numerical"
+                },
+                "gender": {
+                    "sdtype": "categorical"
+                },
+                "loyalty_member": {
+                    "sdtype": "categorical"
+                },
+                "product_type": {
+                    "sdtype": "categorical"
+                },
+                "sku": {
+                    "sdtype": "categorical"
+                },
+                "rating": {
+                    "sdtype": "categorical"
+                },
+                "order_status": {
+                    "sdtype": "categorical"
+                },
+                "payment_method": {
+                    "sdtype": "categorical"
+                },
+                "total_price": {
+                    "sdtype": "numerical"
+                },
+                "unit_price": {
+                    "sdtype": "numerical"
+                },
+                "quantity": {
+                    "sdtype": "categorical"
+                },
+                "purchase_date": {
+                    "sdtype": "datetime",
+                    "datetime_format": "%Y-%m-%d"
+                },
+                "shipping_type": {
+                    "sdtype": "categorical"
+                },
+                "addons": {
+                    "sdtype": "categorical"
+                },
+                "addons_cnt": {
+                    "sdtype": "numerical"
+                }
+            }
+        }
+    },
+    "relationships": [],
+    "METADATA_SPEC_VERSION": "V1"
+}

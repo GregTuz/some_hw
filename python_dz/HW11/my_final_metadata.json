@@ -1,0 +1,19 @@
+{
+    "tables": {
+        "russian": {
+            "columns": {
+                "login": {
+                    "sdtype": "numerical"
+                },
+                "text": {
+                    "sdtype": "categorical"
+                },
+                "name": {
+                    "sdtype": "categorical"
+                }
+            }
+        }
+    },
+    "relationships": [],
+    "METADATA_SPEC_VERSION": "V1"
+}

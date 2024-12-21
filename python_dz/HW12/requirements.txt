@@ -1,0 +1,6 @@
+findspark
+apache_airflow==2.7.3
+pyspark==3.5.2
+requests
+pyarrow
+sdv
