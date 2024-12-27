@@ -44,7 +44,8 @@ cd mentor_sem/todo_app
 ### Шаг 2: Запуск docker-compose
 
 Запустите команду 
-```docker-compose up -d 
+```bash
+docker-compose up -d 
 ```
 спустя всего пару минут контейнеры соберутся и все будет готово для работы;)
 
@@ -52,9 +53,9 @@ cd mentor_sem/todo_app
 ### Шаг 3: Запуск приложения
 
 В данном приложении есть сразу несколько модулей:
-   -PgAdmin будет доступен по адресу: http://localhost:6060/browser/
-   -Grafana будет доступна по адресу: http://localhost:3000/
-   -FastApi с удобной ui-кой будет доступен по адресу: http://localhost:8000/docs#/
+   - **PgAdmin будет доступен по адресу: http://localhost:6060/browser/
+   - **Grafana будет доступна по адресу: http://localhost:3000/
+   - **FastApi с удобной ui-кой будет доступен по адресу: http://localhost:8000/docs#/
 
 ## Технологии
 - **FastAPI**: Фреймворк для создания API.
