@@ -9,4 +9,4 @@ RUN pip install -r requirements.txt
 
 WORKDIR /app/src/
 
-CMD ["python", "-u", "generate_pg_data.py"]
+CMD ["python", "-u", "fill_postgres.py"]

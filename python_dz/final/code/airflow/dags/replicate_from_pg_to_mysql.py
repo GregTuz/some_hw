@@ -33,9 +33,9 @@ with DAG(
 		schedule_interval=timedelta(days=1),
 ) as dag:
 	# Креды и драйверы
-	source_url = get_connection_uri(PostgresHook.get_connection('POSTGRES_PY_FINAL'))
+	source_url = get_connection_uri(PostgresHook.get_connection('postgres_final'))
 	source_driver = 'org.postgresql.Driver'
-	target_url = get_connection_uri(MySqlHook.get_connection('MYSQL_PY_FINAL'))
+	target_url = get_connection_uri(MySqlHook.get_connection('mysql_final'))
 	target_driver = 'com.mysql.cj.jdbc.Driver'
 
 	# EmptyOperator для начала и конца DAG

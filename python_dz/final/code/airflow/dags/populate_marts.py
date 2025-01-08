@@ -31,7 +31,7 @@ with DAG(
 		description='Создание витрин данных в MySQL через Spark',
 		schedule_interval=timedelta(days=1),
 ) as dag:
-	src_tgt_url = get_connection_uri(MySqlHook.get_connection('MYSQL_PY_FINAL'))
+	src_tgt_url = get_connection_uri(MySqlHook.get_connection('mysql_final'))
 	src_tgt_driver = 'com.mysql.cj.jdbc.Driver'
 
 	# EmptyOperator для начала и конца DAG

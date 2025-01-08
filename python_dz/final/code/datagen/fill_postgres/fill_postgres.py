@@ -4,12 +4,15 @@ from datetime import datetime, timedelta
 from typing import Callable
 import logging
 import os
+import sys
 from faker import Faker
 from faker_commerce import Provider as CommerceProvider
 
-conn = psycopg2.connect(dbname='POSTGRES_PY_FINAL', user='user',
-                        password='password', host='localhost')
+conn = psycopg2.connect(dbname='POSTGRES_PY_FINAL', user='user', password='password', host='host.docker.internal')
 cursor = conn.cursor()
+# cursor.execute('select * from public.orders')
+# print(cursor.fetchone())
+# sys.exit(0)
 
 
 class DataGenerator:
@@ -171,7 +174,7 @@ class DataGenerator:
 		"""Оркестрация процесса генерации данных для всех таблиц."""
 
 		with (
-			self.__db_connector.get_conn() as conn,
+			self.__db_connector,
 			conn.cursor() as cur
 		):
 			self.__execute_generation_task(cur, 'users', self.__generate_users, self.__num_users)
