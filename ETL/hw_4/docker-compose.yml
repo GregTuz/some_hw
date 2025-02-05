@@ -1,0 +1,56 @@
+name: python-final
+
+services:
+  postgresql:
+    build: ./Dockerfile
+    container_name: postgresql
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql-data:/var/lib/postgres/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    networks:
+      - app_network
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - ./volumes/pgadmin:/var/lib/pgadmin
+    ports:
+      - "6060:80"
+    networks:
+      - app_network
+    restart: unless-stopped
+
+  nifi:
+    image: apache/nifi:latest
+    environment:
+      SINGLE_USER_CREDENTIALS_USERNAME: admin
+      SINGLE_USER_CREDENTIALS_PASSWORD: 1234567890123
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./Documents/nifi-files:/opt/nifi/nifi-current/files
+    networks:
+      - app_network
+
+volumes:
+  postgresql-data:
+  mysql-data:
+  sqlite-airflow-data:
+  spark-data:
+
+networks:
+  app_network:

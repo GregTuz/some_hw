@@ -1,0 +1,8 @@
+FROM apache/nifi:latest
+
+ENV SINGLE_USER_CREDENTIALS_USERNAME=admin
+ENV SINGLE_USER_CREDENTIALS_PASSWORD=1234567890123
+
+COPY ./Documents/nifi-files /opt/nifi/nifi-current/files
+
+EXPOSE 8443
