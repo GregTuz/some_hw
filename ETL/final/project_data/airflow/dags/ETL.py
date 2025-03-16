@@ -8,16 +8,15 @@ from pymongo import MongoClient
 import logging
 from pyspark.sql import SparkSession
 import pyspark.sql.functions as F
-from pyspark.sql.types import StructField, StringType, StructType, BooleanType, TimestampType, IntegerType, ArrayType, DecimalType
+from pyspark.sql.types import StringType, TimestampType, IntegerType, ArrayType, DecimalType
 
 logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger('ETL_logger')
 logger.setLevel(logging.INFO)
 
-# Определение схем для таблиц PostgreSQL
 TABLE_SCHEMAS = {
 	"UserSessions": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"session_id": StringType(),
 		"user_id": IntegerType(),
 		"start_time": TimestampType(),
@@ -27,21 +26,21 @@ TABLE_SCHEMAS = {
 		"actions": ArrayType(StringType())
 	},
 	"ProductPriceHistory": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"product_id": IntegerType(),
-		"price_changes": StringType(),  # JSONB как строка
+		"price_changes": StringType(),
 		"current_price": DecimalType(10, 2),
 		"currency": StringType()
 	},
 	"EventLogs": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"event_id": StringType(),
 		"timestamp": TimestampType(),
 		"event_type": StringType(),
 		"details": StringType()
 	},
 	"SupportTickets": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"ticket_id": StringType(),
 		"user_id": IntegerType(),
 		"status": StringType(),
@@ -51,13 +50,13 @@ TABLE_SCHEMAS = {
 		"updated_at": TimestampType()
 	},
 	"UserRecommendations": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"user_id": IntegerType(),
 		"recommended_products": ArrayType(IntegerType()),
 		"last_updated": TimestampType()
 	},
 	"ModerationQueue": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"review_id": StringType(),
 		"user_id": IntegerType(),
 		"product_id": IntegerType(),
@@ -68,7 +67,7 @@ TABLE_SCHEMAS = {
 		"submitted_at": TimestampType()
 	},
 	"SearchQueries": {
-		"_id": StringType(),  # Добавляем поле _id как строку
+		"_id": StringType(),
 		"query_id": StringType(),
 		"user_id": IntegerType(),
 		"query_text": StringType(),
@@ -78,7 +77,6 @@ TABLE_SCHEMAS = {
 	}
 }
 
-# Создание Spark сессии
 def create_spark_session() -> SparkSession:
 	spark = SparkSession \
 		.builder \
@@ -92,13 +90,11 @@ def create_spark_session() -> SparkSession:
 		.getOrCreate()
 	return spark
 
-# Подключение к MongoDB
 def connect_to_mongo() -> pymongo.MongoClient:
 	client = MongoClient("mongodb://mongo_user:mongo_password@mongo:27017/ETL_MONGO_FINAL")
 	db = client['ETL_MONGO_FINAL']
 	return db
 
-# Сбор коллекций из MongoDB
 def collect_mongo_collections(db: pymongo.MongoClient) -> list[str]:
 	return db.list_collection_names()
 
@@ -111,20 +107,13 @@ def extract(collection_name: str, spark: SparkSession):
 	return df
 
 def transform(df: pyspark.sql.DataFrame) -> pyspark.sql.DataFrame:
-	# Удаляем строки с пустыми значениями и дубликаты
 	df = df.dropna().dropDuplicates()
-
-	# Преобразуем start_time и end_time в формат TIMESTAMP
 	if "start_time" in df.columns:
 		df = df.withColumn("start_time", F.col("start_time").cast(TimestampType()))
 	if "end_time" in df.columns:
 		df = df.withColumn("end_time", F.col("end_time").cast(TimestampType()))
-
-	# Обработка поля _id
 	if "_id" in df.columns:
 		df = df.withColumn("_id", F.col("_id.oid"))  # Извлекаем oid как строку
-
-	# Преобразуем массивы в строки JSON для полей, которые будут записаны как JSONB
 	for column in ["price_changes", "messages", "recommended_products", "flags", "filters"]:
 		if column in df.columns:
 			df = df.withColumn(column, F.to_json(F.col(column)))
@@ -141,8 +130,6 @@ def cast_types(df, table_name):
 def load(df: pyspark.sql.DataFrame, table_name: str):
 	logger.info(f"Schema before loading to PostgreSQL: {df.schema}")
 	df.show(5)
-
-	# Сохранение данных в PostgreSQL
 	df.write.format("jdbc") \
 		.option('driver', 'org.postgresql.Driver') \
 		.option("url", 'jdbc:postgresql://postgresql/etl_data') \

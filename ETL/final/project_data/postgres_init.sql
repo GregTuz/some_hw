@@ -1,18 +1,14 @@
--- Создание базы данных для ETL
 CREATE DATABASE etl_data;
 
 \connect etl_data;
 
--- Создание роли для PostgreSQL с правами администратора
 CREATE ROLE postgres WITH LOGIN SUPERUSER PASSWORD 'secret';
 
--- Создание пользователя для чтения данных
 CREATE USER etl_reader WITH PASSWORD 'etl_reader_password';
 GRANT CONNECT ON DATABASE etl_data TO etl_reader;
 GRANT USAGE ON SCHEMA public TO etl_reader;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO etl_reader;
 
--- Обновленные схемы для соответствия упрощенным структурам
 CREATE TABLE IF NOT EXISTS UserSessions (
     session_id UUID PRIMARY KEY,
     user_id INT NOT NULL,
@@ -73,12 +69,10 @@ CREATE TABLE IF NOT EXISTS SearchQueries (
     results_count INT               -- Количество результатов
 );
 
--- Создание базы данных для метаданных Airflow
 CREATE DATABASE airflow_meta;
 
 \connect airflow_meta;
 
--- Создание пользователя для записи в метаданные Airflow
 CREATE USER airflow_writer WITH PASSWORD 'airflow_writer_password';
 GRANT CONNECT ON DATABASE airflow_meta TO airflow_writer;
 GRANT CREATE ON SCHEMA public TO airflow_writer;
@@ -86,7 +80,6 @@ GRANT USAGE, SELECT ON SEQUENCE log_id_seq TO airflow_writer;
 GRANT USAGE ON SCHEMA public TO airflow_writer;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT INSERT, UPDATE, SELECT ON TABLES TO airflow_writer;
 
--- Таблица для хранения логов выполнения задач Airflow
 CREATE TABLE IF NOT EXISTS log (
     id SERIAL PRIMARY KEY,
     dttm TIMESTAMPTZ NOT NULL,     -- Время события

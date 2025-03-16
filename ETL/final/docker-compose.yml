@@ -10,7 +10,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
       MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
     volumes:
-#      - ./project_data/mongo_data/:/data/db/
+      - ./project_data/mongo_data/:/data/db/
       - ./project_data/mongo_data/mongo_init.js:/docker-entrypoint-initdb.d/mongo_init.js
     env_file:
       - ./.env
@@ -44,7 +44,7 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
-#      - ./project_data/postgres_data/:/var/lib/postgresql/data
+      - ./project_data/postgres_data/:/var/lib/postgresql/data
       - ./project_data/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
     env_file:
       - ./.env
@@ -62,8 +62,6 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: "${PGADMIN_DEFAULT_EMAIL}"
       PGADMIN_DEFAULT_PASSWORD: "${PGADMIN_DEFAULT_PASSWORD}"
-#    volumes:
-#      - ./volumes/pgadmin:/var/lib/pgadmin
     ports:
       - "6060:80"
     env_file:
@@ -90,14 +88,6 @@ services:
       - ./.env
     depends_on:
       - postgresql
-    deploy:
-      resources:
-        limits:
-          memory: 2g
-          cpus: '1.0'
-        reservations:
-          memory: 1g
-          cpus: '0.5'
     command: >
       bash -c "airflow db init &&
                airflow users create --username admin --password admin --firstname Air --lastname Flow --role Admin --email admin@example.com &&
