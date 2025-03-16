@@ -44,8 +44,8 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
-      - ./project_data/postgres_data/:/var/lib/postgres/data
-      - ./project_data/postgres_data/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
+#      - ./project_data/postgres_data/:/var/lib/postgresql/data
+      - ./project_data/postgres_init.sql:/docker-entrypoint-initdb.d/postgres_init.sql
     env_file:
       - ./.env
     healthcheck:
@@ -78,13 +78,12 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: "${AIRFLOW__CORE__EXECUTOR}"
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "${AIRFLOW__DATABASE__SQL_ALCHEMY_CONN}"
-      AIRFLOW__CORE__LOG_LEVEL: INFO
-      AIRFLOW__CORE__LOGGING_LEVEL: INFO
-      GUNICORN_CMD_ARGS: "--access-logfile - --error-logfile -"
     volumes:
       - ./project_data/airflow/dags:/opt/airflow/dags
       - ./project_data/airflow/logs:/opt/airflow/logs
       - ./project_data/airflow/plugins:/opt/airflow/plugins
+      - ./jars/postgresql-42.7.5.jar:/opt/jars/postgresql-42.7.5.jar
+      - ./jars/mongo-spark-connector_2.13-10.1.1.jar:/opt/jars/mongo-spark-connector_2.13-10.1.1.jar
     ports:
       - "8080:8080"
     env_file:
@@ -94,7 +93,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2g  # увеличиваем лимит памяти
+          memory: 2g
           cpus: '1.0'
         reservations:
           memory: 1g
@@ -111,13 +110,12 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: "${AIRFLOW__CORE__EXECUTOR}"
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "${AIRFLOW__DATABASE__SQL_ALCHEMY_CONN}"
-      AIRFLOW__CORE__LOG_LEVEL: INFO
-      AIRFLOW__CORE__LOGGING_LEVEL: INFO
-      GUNICORN_CMD_ARGS: "--access-logfile - --error-logfile -"
     volumes:
       - ./project_data/airflow/dags:/opt/airflow/dags
       - ./project_data/airflow/logs:/opt/airflow/logs
       - ./project_data/airflow/plugins:/opt/airflow/plugins
+      - ./jars/postgresql-42.7.5.jar:/opt/jars/postgresql-42.7.5.jar
+      - ./jars/mongo-spark-connector_2.13-10.1.1.jar:/opt/jars/mongo-spark-connector_2.13-10.1.1.jar
     depends_on:
       - postgresql
     command: >
