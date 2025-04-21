@@ -1,0 +1,44 @@
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /__ / .__/\_,_/_/ /_/\_\   version 3.0.3
+      /_/
+
+Using Python version 3.8.10 (default, Jun  4 2021 15:09:15)
+SparkSession available as 'spark'.
+>>> spark.read.csv("s3a://mentor/transactions_v2.csv", header=True)
+DataFrame[transaction_id: string, user_id: string, amount: string, currency: string, transaction_date: string, is_fraud: string]
+>>> df = spark.read.csv("s3a://mentor/transactions_v2.csv", header=True)
+>>> df.show(5)
++--------------+-------+------+--------+-------------------+--------+
+|transaction_id|user_id|amount|currency|   transaction_date|is_fraud|
++--------------+-------+------+--------+-------------------+--------+
+|         10001|    500| 250.0|     USD|2023-03-10 14:25:00|       0|
+|         10002|    500| 300.5|     EUR|2023-03-10 14:30:00|       1|
+|         10003|    501| -10.0|     USD|2023-03-10 15:00:00|       0|
+|         10004|    502| 400.0|     ???|2023-03-10 15:10:00|       0|
+|         10005|    501| 120.5|     RUB|2023-03-11 09:00:00|       1|
++--------------+-------+------+--------+-------------------+--------+
+only showing top 5 rows
+
+>>> df.write.mode("overwrite").saveAsTable("transactions_v2")
+
+
+ df = spark.read.option("header", True) \
+...  .option("delimiter", ";") \
+...  .option("inferSchema", True) \
+... .csv("s3a://mentor/logs_v2.txt")
+>>> df.show(5)
++------+--------------+-----------+--------------------+-------------------+
+|log_id|transaction_id|   category|             comment|      log_timestamp|
++------+--------------+-----------+--------------------+-------------------+
+|     1|         10001|Electronics| User bought a phone|2023-03-10 14:26:00|
+|     2|         10002|     Travel|Flight ticket to ...|2023-03-10 14:31:00|
+|     3|         99999|     System|Unrelated transac...|2023-03-10 14:40:00|
+|     4|         10004|     System|  Weird currency ???|2023-03-10 15:15:00|
+|     5|         10006|Electronics|     Laptop purchase|2023-03-11 09:10:00|
++------+--------------+-----------+--------------------+-------------------+
+only showing top 5 rows
+
+>>> df.write.mode("overwrite").saveAsTable("logs_v2")

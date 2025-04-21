@@ -43,4 +43,3 @@ join logs_v2 lv
 on tv.transaction_id = lv.transaction_id
 
 group by tv.transaction_id
-	
